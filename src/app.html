@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		%sveltekit.head%
+
+		<style>
+			#boot-loader {
+				position: fixed;
+				inset: 0;
+				display: grid;
+				place-items: center;
+				background: hsl(0 0% 0%);
+				z-index: 99999;
+				transition: opacity 180ms ease;
+			}
+			#boot-loader.hidden {
+				opacity: 0;
+				pointer-events: none;
+			}
+		</style>
+
+		<script>
+			window.addEventListener('pageshow', (e) => {
+				if (e.persisted) {
+					const el = document.getElementById('boot-loader');
+					if (el) el.classList.add('hidden');
+				}
+			});
+		</script>
+	</head>
+
+	<body data-sveltekit-preload-data="hover">
+		<div id="boot-loader" aria-label="Loading">
+		    <img src="/loading.gif" alt="Loading"/>
+		</div>
+
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>

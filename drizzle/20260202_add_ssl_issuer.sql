@@ -1,0 +1,18 @@
+ALTER TABLE connector
+	ADD COLUMN ssl_issuer_enabled TINYINT(1) NOT NULL DEFAULT 0,
+	ADD COLUMN ssl_issuer_mode VARCHAR(32) NULL,
+	ADD COLUMN ssl_issuer_email VARCHAR(191) NULL,
+	ADD COLUMN ssl_issuer_ca_dir_url TEXT NULL,
+	ADD COLUMN ssl_issuer_accept_tos TINYINT(1) NOT NULL DEFAULT 0,
+	ADD COLUMN ssl_issuer_key_type VARCHAR(32) NULL,
+	ADD COLUMN ssl_issuer_account_dir TEXT NULL,
+	ADD COLUMN ssl_issuer_include_www VARCHAR(16) NULL,
+	ADD COLUMN ssl_issuer_renew_enabled TINYINT(1) NOT NULL DEFAULT 0,
+	ADD COLUMN ssl_issuer_renew_interval_hours INT NULL,
+	ADD COLUMN ssl_issuer_cert_path TEXT NULL,
+	ADD COLUMN ssl_issuer_key_path TEXT NULL,
+	ADD COLUMN ssl_issuer_webroot_path TEXT NULL,
+	ADD COLUMN ssl_issuer_timeout_seconds INT NULL,
+	ADD COLUMN ssl_issuer_expected_ips TEXT NULL,
+	ADD COLUMN ssl_issuer_verify_dns TINYINT(1) NOT NULL DEFAULT 1,
+	ADD COLUMN ssl_issuer_verify_http TINYINT(1) NOT NULL DEFAULT 1;

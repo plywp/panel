@@ -1,0 +1,31 @@
+{
+	"auth.signIn.title": "Drag your sorry ass inside",
+	"auth.signIn.email": "Dump your damn email here, hero",
+	"auth.signIn.description": "Type your email and password so this screen can stop roasting you",
+	"auth.signIn.password": "That weak-ass secret you pretend is secure",
+	"auth.signIn.button": "Kick the door the hell open",
+	"auth.signIn.error.invalid": "Absolutely not. That login was a flaming dumpster fire",
+	"auth.signIn.ForgotPassword": "Forgot your shit already? Impressive",
+	"auth.signIn.createAccount": "Make a damn account and commit",
+	"auth.signIn.noAccount": "You just staring at the form like an idiot?",
+
+	"branding.poweredBy": "Powered by PLYWP — running on spite and caffeine",
+
+	"auth.signUp.title": "Sign the hell up, coward",
+	"auth.signUp.description": "Create an account and stop wasting oxygen",
+	"auth.signUp.firstName": "Your first damn name (yes, the real one)",
+	"auth.signUp.lastName": "Your last damn name (no, not \"bruh\")",
+	"auth.signUp.firstNamePlaceholder": "Whatever",
+	"auth.signUp.lastNamePlaceholder": "TheHell",
+	"auth.signUp.email": "Your email, you magnificent disaster",
+	"auth.signUp.emailPlaceholder": "you@this-was-a-choice.com",
+	"auth.signUp.password": "Make a password that doesn’t completely suck ass",
+	"auth.signUp.togglePassword": "Show or hide this cursed crap",
+	"auth.signUp.button": "Create the damn account",
+	"auth.signUp.haveAccount": "You already did this once, remember?",
+	"auth.signUp.signIn": "Get your ass back in here",
+	"auth.signUp.success": "Holy shit, you didn’t screw it up",
+	"auth.signUp.error.missingFields": "You missed some obvious crap, genius",
+	"auth.signUp.error.failed": "That failed so hard it echoed",
+	"auth.signUp.error.generic": "Something exploded. Not literally. Probably."
+}

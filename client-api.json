@@ -1,0 +1,529 @@
+{
+	"info": {
+		"name": "PlyWP Client API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{api_key}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{ "key": "base_url", "value": "http://localhost:5173" },
+		{ "key": "api_key", "value": "REPLACE_ME" },
+		{ "key": "site_id", "value": "REPLACE_ME" },
+		{ "key": "path", "value": "/" },
+		{ "key": "plugin", "value": "example-plugin" },
+		{ "key": "theme", "value": "example-theme" },
+		{ "key": "user_login", "value": "example-user" }
+	],
+	"item": [
+		{
+			"name": "Sites",
+			"item": [
+				{
+					"name": "List Accessible Sites",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/client/sites",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites"]
+						}
+					}
+				},
+				{
+					"name": "Get Site Details",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Site Health",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "health"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Credentials",
+			"item": [
+				{
+					"name": "Get Admin Credentials",
+					"request": {
+						"method": "POST",
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/credentials",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "credentials"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Plugins",
+			"item": [
+				{
+					"name": "List Plugins",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/plugins?status=active",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "plugins"],
+							"query": [{ "key": "status", "value": "active" }]
+						}
+					}
+				},
+				{
+					"name": "Install Plugin",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"action\": \"install\",\n  \"source\": \"{{plugin}}\",\n  \"activate\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/plugins",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "plugins"]
+						}
+					}
+				},
+				{
+					"name": "Activate Plugin",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"activate\",\n  \"plugin\": \"{{plugin}}\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/plugins",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "plugins"]
+						}
+					}
+				},
+				{
+					"name": "Deactivate Plugin",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"deactivate\",\n  \"plugin\": \"{{plugin}}\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/plugins",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "plugins"]
+						}
+					}
+				},
+				{
+					"name": "Delete Plugin",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"delete\",\n  \"plugin\": \"{{plugin}}\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/plugins",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "plugins"]
+						}
+					}
+				},
+				{
+					"name": "Update Plugins",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"update\",\n  \"plugin\": \"all\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/plugins",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "plugins"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Themes",
+			"item": [
+				{
+					"name": "List Themes",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/themes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "themes"]
+						}
+					}
+				},
+				{
+					"name": "Install Theme",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"install\",\n  \"source\": \"{{theme}}\",\n  \"activate\": true\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/themes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "themes"]
+						}
+					}
+				},
+				{
+					"name": "Activate Theme",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"activate\",\n  \"theme\": \"{{theme}}\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/themes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "themes"]
+						}
+					}
+				},
+				{
+					"name": "Enable Theme (Network)",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"enable\",\n  \"theme\": \"{{theme}}\",\n  \"network\": true\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/themes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "themes"]
+						}
+					}
+				},
+				{
+					"name": "Delete Theme",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"delete\",\n  \"theme\": \"{{theme}}\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/themes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "themes"]
+						}
+					}
+				},
+				{
+					"name": "Update Themes",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"update\",\n  \"theme\": \"all\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/themes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "themes"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "users"]
+						}
+					}
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"action\": \"create\",\n  \"username\": \"newuser\",\n  \"email\": \"newuser@example.com\",\n  \"password\": \"StrongPass123!\",\n  \"role\": \"subscriber\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "users"]
+						}
+					}
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"action\": \"update\",\n  \"user_login\": \"{{user_login}}\",\n  \"display_name\": \"Updated Name\",\n  \"email\": \"updated@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "users"]
+						}
+					}
+				},
+				{
+					"name": "Set User Role",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"roles\",\n  \"user_login\": \"{{user_login}}\",\n  \"role\": \"editor\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "users"]
+						}
+					}
+				},
+				{
+					"name": "Reset User Password",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"resetPassword\",\n  \"user_login\": \"{{user_login}}\",\n  \"password\": \"NewStrongPass123!\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "users"]
+						}
+					}
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"delete\",\n  \"user_login\": \"{{user_login}}\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "users"]
+						}
+					}
+				},
+				{
+					"name": "List Roles",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"listRoles\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "users"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "File Manager",
+			"item": [
+				{
+					"name": "List Files",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager?path={{path}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"],
+							"query": [{ "key": "path", "value": "{{path}}" }]
+						}
+					}
+				},
+				{
+					"name": "Read File",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"read\",\n  \"path\": \"{{path}}\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Write File",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"write\",\n  \"path\": \"{{path}}\",\n  \"content\": \"Hello world\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Create File",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"createFile\",\n  \"path\": \"{{path}}\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Create Folder",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"createFolder\",\n  \"path\": \"{{path}}\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Rename File",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"rename\",\n  \"from\": \"{{path}}\",\n  \"to\": \"{{path}}-renamed\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Move File",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"move\",\n  \"from\": \"{{path}}\",\n  \"to\": \"{{path}}-moved\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Copy Files",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"copy\",\n  \"sources\": [\"{{path}}\"],\n  \"target\": \"/\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Delete Files",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"delete\",\n  \"paths\": [\"{{path}}\"]\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Archive Files",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"archive\",\n  \"sources\": [\"{{path}}\"],\n  \"target\": \"/archive.zip\",\n  \"format\": \"zip\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Extract Archive",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"body": { "mode": "raw", "raw": "{\n  \"action\": \"extract\",\n  \"source\": \"{{path}}\",\n  \"target\": \"/\",\n  \"format\": \"zip\"\n}" },
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager"]
+						}
+					}
+				},
+				{
+					"name": "Download File",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager/download?path={{path}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager", "download"],
+							"query": [{ "key": "path", "value": "{{path}}" }]
+						}
+					}
+				},
+				{
+					"name": "Upload File",
+					"request": {
+						"method": "POST",
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{ "key": "path", "value": "/", "type": "text" },
+								{ "key": "file", "type": "file", "src": "/path/to/file.txt" }
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/client/sites/{{site_id}}/filemanager/upload",
+							"host": ["{{base_url}}"],
+							"path": ["api", "client", "sites", "{{site_id}}", "filemanager", "upload"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

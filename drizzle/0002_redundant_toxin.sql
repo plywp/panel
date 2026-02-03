@@ -1,0 +1,1 @@
+ALTER TABLE `connector` ADD `fqdn` varchar(191) NOT NULL;

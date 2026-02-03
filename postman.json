@@ -1,0 +1,586 @@
+{
+	"info": {
+		"name": "Plyorde API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "token",
+			"value": "REPLACE_ME"
+		},
+		{
+			"key": "site_id",
+			"value": "REPLACE_ME"
+		},
+		{
+			"key": "dns_zone",
+			"value": "example.local"
+		},
+		{
+			"key": "dns_record_name",
+			"value": "www.example.local"
+		},
+		{
+			"key": "file_path",
+			"value": "wordpress/wp-config.php"
+		},
+		{
+			"key": "file_target",
+			"value": "wordpress/archive.zip"
+		},
+		{
+			"key": "upload_path",
+			"value": "wordpress/uploads/hello.txt"
+		}
+	],
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/health",
+					"host": ["{{base_url}}"],
+					"path": ["api", "health"]
+				}
+			}
+		},
+		{
+			"name": "Create Site",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"disk_limit_mb\": 100,\n  \"domain_name\": \"example.local\",\n  \"php_version\": \"8.4\",\n  \"db_name\": \"wp\",\n  \"site_title\": \"Example WordPress\",\n  \"admin_user\": \"admin\",\n  \"admin_pass\": \"StrongPassword123!\",\n  \"admin_email\": \"admin@example.local\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/sites",
+					"host": ["{{base_url}}"],
+					"path": ["api", "sites"]
+				}
+			}
+		},
+		{
+			"name": "List Sites",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/sites",
+					"host": ["{{base_url}}"],
+					"path": ["api", "sites"]
+				},
+				"description": "Returns all WordPress sites registered in the panel database."
+			}
+		},
+		{
+			"name": "Create Site Status",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/sites/{{site_id}}/status",
+					"host": ["{{base_url}}"],
+					"path": ["api", "sites", "{{site_id}}", "status"]
+				}
+			}
+		},
+		{
+			"name": "Site Health",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/sites/{{site_id}}/health",
+					"host": ["{{base_url}}"],
+					"path": ["api", "sites", "{{site_id}}", "health"]
+				}
+			},
+			"description": "Returns site storage usage and filesystem stats."
+		},
+		{
+			"name": "Delete Site",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/sites/{{site_id}}",
+					"host": ["{{base_url}}"],
+					"path": ["api", "sites", "{{site_id}}"]
+				}
+			}
+		},
+		{
+			"name": "DNS",
+			"item": [
+				{
+					"name": "List Zones",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dns/zones",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dns", "zones"]
+						}
+					},
+					"description": "Lists all DNS zones."
+				},
+				{
+					"name": "Create Zone",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{dns_zone}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dns/zones",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dns", "zones"]
+						}
+					},
+					"description": "Creates a DNS zone. You can include an optional `soa` object to override defaults."
+				},
+				{
+					"name": "Get Zone",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dns/zones/{{dns_zone}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dns", "zones", "{{dns_zone}}"]
+						}
+					},
+					"description": "Returns a zone with its SOA and records."
+				},
+				{
+					"name": "Delete Zone",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dns/zones/{{dns_zone}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dns", "zones", "{{dns_zone}}"]
+						}
+					},
+					"description": "Deletes a DNS zone and its records."
+				},
+				{
+					"name": "List Records",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/dns/zones/{{dns_zone}}/records?name={{dns_record_name}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dns", "zones", "{{dns_zone}}", "records"],
+							"query": [
+								{
+									"key": "name",
+									"value": "{{dns_record_name}}"
+								}
+							]
+						}
+					},
+					"description": "Lists records. Provide `name` to filter; omit it to list all records in the zone."
+				},
+				{
+					"name": "Add Record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{dns_record_name}}\",\n  \"type\": \"A\",\n  \"value\": \"127.0.0.1\",\n  \"ttl\": 3600\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dns/zones/{{dns_zone}}/records",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dns", "zones", "{{dns_zone}}", "records"]
+						}
+					},
+					"description": "Adds a record to a zone. Use `name` of `@` to target the zone apex."
+				},
+				{
+					"name": "Delete Record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{dns_record_name}}\",\n  \"type\": \"A\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/dns/zones/{{dns_zone}}/records",
+							"host": ["{{base_url}}"],
+							"path": ["api", "dns", "zones", "{{dns_zone}}", "records"]
+						}
+					},
+					"description": "Deletes a record by name and type."
+				}
+			]
+		},
+		{
+			"name": "File Manager",
+			"item": [
+				{
+					"name": "List Files",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/list?path={{file_path}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "list"],
+							"query": [
+								{
+									"key": "path",
+									"value": "{{file_path}}"
+								}
+							]
+						}
+					},
+					"description": "Lists files under the given path (relative to the site's public directory)."
+				},
+				{
+					"name": "Read File",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/read?path={{file_path}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "read"],
+							"query": [
+								{
+									"key": "path",
+									"value": "{{file_path}}"
+								}
+							]
+						}
+					},
+					"description": "Reads a file and returns raw bytes."
+				},
+				{
+					"name": "Download File",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/download?path={{file_path}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "download"],
+							"query": [
+								{
+									"key": "path",
+									"value": "{{file_path}}"
+								}
+							]
+						}
+					},
+					"description": "Downloads a file as an attachment."
+				},
+				{
+					"name": "Write File",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "Hello from Plyorde"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/write?path={{file_path}}&perm=0644",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "write"],
+							"query": [
+								{
+									"key": "path",
+									"value": "{{file_path}}"
+								},
+								{
+									"key": "perm",
+									"value": "0644"
+								}
+							]
+						}
+					},
+					"description": "Writes a file with the raw request body."
+				},
+				{
+					"name": "Upload File",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/upload?path={{upload_path}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "upload"],
+							"query": [
+								{
+									"key": "path",
+									"value": "{{upload_path}}"
+								}
+							]
+						}
+					},
+					"description": "Uploads a file to the given path. Use query param `filename` to override the uploaded name."
+				},
+				{
+					"name": "Create Directory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"path\": \"wordpress/uploads\",\n  \"perm\": \"0755\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/mkdir",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "mkdir"]
+						}
+					},
+					"description": "Creates a directory (and parents as needed)."
+				},
+				{
+					"name": "Delete Path",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/delete?path={{file_path}}",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "delete"],
+							"query": [
+								{
+									"key": "path",
+									"value": "{{file_path}}"
+								}
+							]
+						}
+					},
+					"description": "Deletes a file or directory recursively."
+				},
+				{
+					"name": "Move Path",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"from\": \"{{file_path}}\",\n  \"to\": \"wordpress/wp-config.bak\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/move",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "move"]
+						}
+					},
+					"description": "Moves or renames a file/directory."
+				},
+				{
+					"name": "Compress",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"source\": \"wordpress\",\n  \"target\": \"{{file_target}}\",\n  \"format\": \"zip\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/compress",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "compress"]
+						}
+					},
+					"description": "Creates an archive (zip, tar, tar.gz)."
+				},
+				{
+					"name": "Decompress",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"source\": \"{{file_target}}\",\n  \"target\": \"wordpress/unpacked\",\n  \"format\": \"zip\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/filemanager/{{site_id}}/decompress",
+							"host": ["{{base_url}}"],
+							"path": ["api", "filemanager", "{{site_id}}", "decompress"]
+						}
+					},
+					"description": "Extracts an archive. Omit `format` to auto-detect from the filename."
+				}
+			]
+		}
+	]
+}
