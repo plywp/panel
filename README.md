@@ -31,8 +31,7 @@ Before you deploy, make sure you have:
 
 - **Node.js** (LTS recommended)
 - **npm / pnpm / bun** (pick one package manager and stick to it)
-- A supported SQL database (commonly **PostgreSQL** or **MySQL/MariaDB**)  
-  *(Your project’s Drizzle setup determines which one you’re using.)*
+- MariaDB/MYSQL
 - A server/VPS for production (optional for local dev)
 - Basic familiarity with `.env` configuration.
 
