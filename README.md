@@ -225,7 +225,7 @@ Usually an `ORIGIN` / `BETTER_AUTH_URL` mismatch.
 
 ## License
 
-> CC-BY-NC
+> [CC-BY](https://creativecommons.org/licenses/by/4.0/legalcode.txt)
 
 ---
 
