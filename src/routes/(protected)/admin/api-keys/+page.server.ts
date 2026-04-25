@@ -1,6 +1,8 @@
 import type { Actions, PageServerLoad } from './$types';
 import { error, fail } from '@sveltejs/kit';
 import { auth } from '$lib/auth';
+import { db } from '$lib/server/db';
+import * as schema from '$lib/server/db/schema';
 import {
 	parseAdminApiKeyMetadata,
 	type AdminApiKeyMetadata,
@@ -81,21 +83,21 @@ const parsePermissionsJson = (value: unknown): ApiKeyPermissions | null => {
 };
 
 const listAdminKeys = async (headers: Headers, userId: string) => {
-	const keys = await auth.api.listApiKeys({ headers });
-	const list = Array.isArray(keys) ? keys : [];
-	return list.flatMap((key) => {
-		if (key.userId !== userId) return [];
+	const keys = await db.query.apikey.findMany();
+
+	return (Array.isArray(keys) ? keys : []).flatMap((key) => {
+		if (key.referenceId !== userId) return [];
+		
 		const metadata = parseAdminApiKeyMetadata(key.metadata);
-		if (!metadata) return [];
 		return [
 			{
 				id: key.id,
-				name: key.name ?? metadata.label ?? null,
+				name: key.name ?? metadata?.label ?? null,
 				prefix: key.prefix ?? null,
 				start: key.start ?? null,
 				enabled: key.enabled ?? true,
 				permissions: parsePermissionsJson(key.permissions ?? null),
-				metadata,
+				metadata: metadata || { kind: 'admin', createdByUserId: userId },
 				expiresAt: toIso(key.expiresAt ?? null),
 				rateLimitEnabled: key.rateLimitEnabled ?? null,
 				rateLimitMax: key.rateLimitMax ?? null,
@@ -104,8 +106,8 @@ const listAdminKeys = async (headers: Headers, userId: string) => {
 				refillAmount: key.refillAmount ?? null,
 				refillInterval: key.refillInterval ?? null,
 				lastRefillAt: toIso(key.lastRefillAt ?? null),
-				createdAt: toIso(key.createdAt) ?? '',
-				updatedAt: toIso(key.updatedAt) ?? ''
+				createdAt: toIso(key.createdAt),
+				updatedAt: toIso(key.updatedAt)
 			}
 		];
 	});
@@ -113,11 +115,11 @@ const listAdminKeys = async (headers: Headers, userId: string) => {
 
 const getAdminKeyOrThrow = async (headers: Headers, userId: string, keyId: string) => {
 	const key = await auth.api.getApiKey({
-		query: { id: keyId },
+		query: { id: keyId, configId: 'user' },
 		headers
 	});
 
-	if (!key || key.userId !== userId) throw error(404, 'API key not found');
+	if (!key || key.referenceId !== userId) throw error(404, 'API key not found');
 	const metadata = parseAdminApiKeyMetadata(key.metadata);
 	if (!metadata) throw error(404, 'API key not found');
 	return {
@@ -178,6 +180,7 @@ export const actions: Actions = {
 			body: {
 				name: name || undefined,
 				userId: session.user.id,
+				configId: 'user',
 				expiresIn: expiresIn ?? undefined,
 				permissions,
 				metadata: {

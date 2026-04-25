@@ -10,11 +10,11 @@
 	import { browser } from '$app/environment';
 	import { fly } from 'svelte/transition';
 
-	import ArrowRight from 'lucide-svelte/icons/arrow-right';
-	import Lock from 'lucide-svelte/icons/lock';
-	import Mail from 'lucide-svelte/icons/mail';
-	import Eye from 'lucide-svelte/icons/eye';
-	import EyeOff from 'lucide-svelte/icons/eye-off';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import Lock from '@lucide/svelte/icons/lock';
+	import Mail from '@lucide/svelte/icons/mail';
+	import Eye from '@lucide/svelte/icons/eye';
+	import EyeOff from '@lucide/svelte/icons/eye-off';
 	import LanguageSwitcher from '$lib/components/lang-switcher.svelte';
 
 	const email = writable('');

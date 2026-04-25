@@ -3,7 +3,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { onDestroy } from 'svelte';
-	import { Copy, Eye, EyeOff, KeyRound, Settings } from 'lucide-svelte';
+	import { Copy, Eye, EyeOff, KeyRound, Settings } from '@lucide/svelte';
 
 	export let data: {
 		site: {

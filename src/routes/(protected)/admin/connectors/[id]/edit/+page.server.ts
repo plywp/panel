@@ -24,7 +24,32 @@ const schema = z
 
 		dnsServerAddress: z.string().min(1),
 		dnsServerPort: z.coerce.number().int().min(1).max(65535).default(53),
-		dnsServerProto: z.enum(['tcp', 'udp', 'both']).default('tcp')
+		dnsServerProto: z.enum(['tcp', 'udp', 'both']).default('tcp'),
+
+		sslIssuerEnabled: z.coerce.boolean().default(false),
+		sslIssuerMode: z.string().optional().or(z.literal('')),
+		sslIssuerEmail: z.string().optional().or(z.literal('')),
+		sslIssuerCaDirUrl: z.string().optional().or(z.literal('')),
+		sslIssuerAcceptTos: z.coerce.boolean().default(false),
+		sslIssuerKeyType: z.string().optional().or(z.literal('')),
+		sslIssuerAccountDir: z.string().optional().or(z.literal('')),
+		sslIssuerIncludeWww: z.string().optional().or(z.literal('')),
+		sslIssuerRenewEnabled: z.coerce.boolean().default(false),
+		sslIssuerRenewIntervalHours: z.coerce.number().int().optional(),
+		sslIssuerCertPath: z.string().optional().or(z.literal('')),
+		sslIssuerKeyPath: z.string().optional().or(z.literal('')),
+		sslIssuerWebrootPath: z.string().optional().or(z.literal('')),
+		sslIssuerTimeoutSeconds: z.coerce.number().int().optional(),
+		sslIssuerExpectedIps: z.string().optional().or(z.literal('')),
+		sslIssuerVerifyDns: z.coerce.boolean().default(true),
+		sslIssuerVerifyHttp: z.coerce.boolean().default(true),
+
+		dataBaseUsername: z.string().min(1),
+		dataBasePassword: z.string().min(1),
+		dataBaseHost: z.string().min(1),
+		dataBasePort: z.coerce.number().int().min(1).max(65535).default(3306),
+		dataBaseName: z.string().min(1),
+		dataBaseDir: z.string().min(1)
 	})
 	.superRefine((val, ctx) => {
 		if (val.daemonSslEnabled) {
@@ -47,11 +72,15 @@ export const load: PageServerLoad = async ({ params }) => {
 	const id = Number(params.id);
 	if (!Number.isInteger(id) || id <= 0) throw error(404, 'Not found');
 
-	const rows = await db.select().from(connector).where(eq(connector.id, id)).limit(1);
-	const conn = rows[0];
-	if (!conn) throw error(404, 'Not found');
-
-	return { conn };
+	try {
+		const rows = await db.select().from(connector).where(eq(connector.id, id)).limit(1);
+		const conn = rows[0];
+		if (!conn) throw error(404, 'Not found');
+		return { conn };
+	} catch (e: any) {
+		console.error('Error loading connector:', e);
+		throw error(500, `Database error: ${e.message}`);
+	}
 };
 
 export const actions: Actions = {
@@ -86,10 +115,40 @@ export const actions: Actions = {
 
 				dnsServerAddress: parsed.data.dnsServerAddress,
 				dnsServerPort: parsed.data.dnsServerPort,
-				dnsServerProto: parsed.data.dnsServerProto
+				dnsServerProto: parsed.data.dnsServerProto,
+
+				sslIssuerEnabled: parsed.data.sslIssuerEnabled,
+				sslIssuerMode: parsed.data.sslIssuerMode,
+				sslIssuerEmail: parsed.data.sslIssuerEmail,
+				sslIssuerCaDirUrl: parsed.data.sslIssuerCaDirUrl,
+				sslIssuerAcceptTos: parsed.data.sslIssuerAcceptTos,
+				sslIssuerKeyType: parsed.data.sslIssuerKeyType,
+				sslIssuerAccountDir: parsed.data.sslIssuerAccountDir,
+				sslIssuerIncludeWww: parsed.data.sslIssuerIncludeWww,
+				sslIssuerRenewEnabled: parsed.data.sslIssuerRenewEnabled,
+				sslIssuerRenewIntervalHours: parsed.data.sslIssuerRenewIntervalHours,
+				sslIssuerCertPath: parsed.data.sslIssuerCertPath,
+				sslIssuerKeyPath: parsed.data.sslIssuerKeyPath,
+				sslIssuerWebrootPath: parsed.data.sslIssuerWebrootPath,
+				sslIssuerTimeoutSeconds: parsed.data.sslIssuerTimeoutSeconds,
+				sslIssuerExpectedIps: parsed.data.sslIssuerExpectedIps,
+				sslIssuerVerifyDns: parsed.data.sslIssuerVerifyDns,
+				sslIssuerVerifyHttp: parsed.data.sslIssuerVerifyHttp,
+
+				dataBaseUsername: parsed.data.dataBaseUsername,
+				dataBasePassword: parsed.data.dataBasePassword,
+				dataBaseHost: parsed.data.dataBaseHost,
+				dataBasePort: parsed.data.dataBasePort,
+				dataBaseName: parsed.data.dataBaseName,
+				dataBaseDir: parsed.data.dataBaseDir
 			})
 			.where(eq(connector.id, id));
 
+		throw redirect(303, '/admin/connectors');
+	},
+	delete: async ({ params }) => {
+		const id = Number(params.id);
+		await db.delete(connector).where(eq(connector.id, id));
 		throw redirect(303, '/admin/connectors');
 	}
 };

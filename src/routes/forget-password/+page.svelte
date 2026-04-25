@@ -7,8 +7,8 @@
 	import { Label } from '$lib/components/ui/label';
 	import { toast } from 'svelte-sonner';
 
-	import Mail from 'lucide-svelte/icons/mail';
-	import ArrowRight from 'lucide-svelte/icons/arrow-right';
+	import Mail from '@lucide/svelte/icons/mail';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 
 	const email = writable('');
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { locale, locales } from 'svelte-i18n';
 	import * as NativeSelect from '$lib/components/ui/native-select/index.js';
-	import { Globe } from 'lucide-svelte';
+	import { Globe } from '@lucide/svelte';
 	import { onMount } from 'svelte';
 
 	function label(code: string): string {

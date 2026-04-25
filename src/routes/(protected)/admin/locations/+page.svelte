@@ -2,7 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { Button } from '$lib/components/ui/button';
-	import { MapPin, Pencil, Plus, Trash2, X } from 'lucide-svelte';
+	import { MapPin, Pencil, Plus, Trash2, X } from '@lucide/svelte';
 
 	export let data: { locations: { id: number; name: string; country: string }[] };
 

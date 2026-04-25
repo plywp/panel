@@ -20,7 +20,7 @@
 		RotateCw,
 		ShieldCheck,
 		Trash2
-	} from 'lucide-svelte';
+	} from '@lucide/svelte';
 
 	type ApiKeyPermissions = Record<string, string[]>;
 
@@ -130,10 +130,18 @@
 
 	const formatPermissions = (permissions: ApiKeyPermissions | null) => {
 		if (!permissions) return '—';
-		const chunks = Object.entries(permissions)
-			.map(([resource, actions]) => `${resource}:${actions.join(', ')}`)
-			.sort();
-		return chunks.length ? chunks.join(' · ') : '—';
+		try {
+			const chunks = Object.entries(permissions)
+				.map(([resource, actions]) => {
+					const acts = Array.isArray(actions) ? actions : [String(actions)];
+					return `${resource}:${acts.join(', ')}`;
+				})
+				.sort();
+			return chunks.length ? chunks.join(' · ') : '—';
+		} catch (e) {
+			console.error('Error formatting permissions:', e);
+			return 'Error';
+		}
 	};
 
 	const formatRateLimit = (key: AdminApiKey) => {

@@ -42,6 +42,14 @@ export const connector = mysqlTable(
 		dnsServerPort: int('dns_server_port').notNull().default(53),
 		dnsServerProto: mysqlEnum('dns_server_proto', ['tcp', 'udp', 'both']).notNull().default('tcp'),
 
+		dataBaseUsername: varchar('data_base_username', { length: 191 }).notNull().default('plyorde'),
+		dataBasePassword: text('data_base_password').notNull(),
+		dataBaseHost: varchar('data_base_host', { length: 191 }).notNull().default('localhost'),
+		dataBasePort: int('data_base_port').notNull().default(3306),
+		dataBaseName: varchar('data_base_name', { length: 191 }).notNull().default('plyorde'),
+		dataBaseDir: text('data_base_dir').notNull().default('/var/lib/plyorde'),
+
+
 		serverIp: varchar('server_ip', { length: 191 }).notNull(),
 
 		locationId: int('location_id')

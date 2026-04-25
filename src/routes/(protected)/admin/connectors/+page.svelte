@@ -8,7 +8,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { connectorHealthUrl } from '$lib/connector-url';
 	import axios from 'axios';
-	import { Plug, Plus, Trash2 } from 'lucide-svelte';
+	import { Plug, Plus, Trash2 } from '@lucide/svelte';
 
 	export let data: {
 		connectors: {

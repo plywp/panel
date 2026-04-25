@@ -4,7 +4,7 @@
 	import { client } from '$lib/auth-client';
 	import { Button } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { Bell } from 'lucide-svelte';
+	import { Bell } from '@lucide/svelte';
 
 	type Organization = {
 		id: string;

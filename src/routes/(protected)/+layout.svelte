@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Header from '../Header.svelte';
+	import Header from '$lib/components/Header.svelte';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import AppSidebar from '$lib/components/app-sidebar.svelte';
 	import { Toaster } from '$lib/components/ui/sonner';

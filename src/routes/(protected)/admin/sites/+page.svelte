@@ -2,7 +2,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
-	import { Globe, HardDrive, Plus, RefreshCw, Settings } from 'lucide-svelte';
+	import { Globe, HardDrive, Plus, RefreshCw, Settings } from '@lucide/svelte';
 
 	export let data: {
 		activeOrganizationId: string | null;

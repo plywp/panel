@@ -5,7 +5,7 @@
 	import { connectorHealthUrl } from '$lib/connector-url';
 	import axios from 'axios';
 	import CardHeader from '../../CardHead.svelte';
-	import { ArrowLeft, RefreshCw } from 'lucide-svelte';
+	import { ArrowLeft, RefreshCw } from '@lucide/svelte';
 
 	export let data: {
 		conn?: {

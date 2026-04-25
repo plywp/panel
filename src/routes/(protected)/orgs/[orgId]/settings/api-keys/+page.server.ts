@@ -62,30 +62,43 @@ const validatePositive = (value: number | undefined, field: string): string | nu
 	return null;
 };
 
+const parsePermissionsJson = (value: unknown): ApiKeyPermissions | null => {
+	if (!value) return null;
+	if (typeof value === 'string') {
+		try {
+			return JSON.parse(value);
+		} catch {
+			return null;
+		}
+	}
+	return value as ApiKeyPermissions;
+};
+
 const listOrgKeys = async (headers: Headers, orgId: string) => {
-	const keys = await auth.api.listApiKeys({ headers });
+	const keys = await db.query.apikey.findMany();
 	return (Array.isArray(keys) ? keys : []).flatMap((key) => {
+		if (key.referenceId !== orgId) return [];
+		
 		const metadata = parseApiKeyMetadata(key.metadata);
-		if (!metadata || metadata.orgId !== orgId) return [];
 		return [
 			{
 				id: key.id,
-				name: key.name ?? metadata.label ?? null,
+				name: key.name ?? metadata?.label ?? null,
 				prefix: key.prefix ?? null,
 				start: key.start ?? null,
 				enabled: key.enabled ?? true,
-				permissions: key.permissions ?? null,
+				permissions: parsePermissionsJson(key.permissions),
 				metadata,
-				expiresAt: key.expiresAt ?? null,
+				expiresAt: key.expiresAt ? key.expiresAt.toISOString() : null,
 				rateLimitEnabled: key.rateLimitEnabled ?? null,
 				rateLimitMax: key.rateLimitMax ?? null,
 				rateLimitTimeWindow: key.rateLimitTimeWindow ?? null,
 				remaining: key.remaining ?? null,
 				refillAmount: key.refillAmount ?? null,
 				refillInterval: key.refillInterval ?? null,
-				lastRefillAt: key.lastRefillAt ?? null,
-				createdAt: key.createdAt,
-				updatedAt: key.updatedAt
+				lastRefillAt: key.lastRefillAt ? key.lastRefillAt.toISOString() : null,
+				createdAt: key.createdAt.toISOString(),
+				updatedAt: key.updatedAt.toISOString()
 			}
 		];
 	});
@@ -93,12 +106,11 @@ const listOrgKeys = async (headers: Headers, orgId: string) => {
 
 const getOrgKeyOrThrow = async (headers: Headers, orgId: string, keyId: string) => {
 	const key = await auth.api.getApiKey({
-		query: { id: keyId },
+		query: { id: keyId, configId: 'organization' },
 		headers
 	});
-	if (!key) throw error(404, 'API key not found');
+	if (!key || key.referenceId !== orgId) throw error(404, 'API key not found');
 	const metadata = parseApiKeyMetadata(key.metadata);
-	if (!metadata || metadata.orgId !== orgId) throw error(404, 'API key not found');
 	return { key, metadata };
 };
 
@@ -167,33 +179,40 @@ export const actions: Actions = {
 			if (rateValidationError) return fail(400, { error: rateValidationError });
 		}
 
-		const created = await auth.api.createApiKey({
-			body: {
-				name: name || undefined,
-				userId: session.user.id,
-				expiresIn: expiresIn ?? undefined,
-				permissions,
-				metadata: {
-					orgId,
-					allowedSiteIds,
-					label: name || undefined,
-					createdByUserId: session.user.id
+		try {
+			const created = await auth.api.createApiKey({
+				body: {
+					name: name || undefined,
+					userId: session.user.id,
+					organizationId: orgId,
+					configId: 'organization',
+					expiresIn: expiresIn ?? undefined,
+					permissions,
+					metadata: {
+						allowedSiteIds,
+						label: name || undefined,
+						createdByUserId: session.user.id
+					},
+					remaining: remaining ?? undefined,
+					refillAmount: refillAmount ?? undefined,
+					refillInterval: refillInterval ?? undefined,
+					rateLimitEnabled,
+					rateLimitTimeWindow: rateLimitTimeWindow ?? undefined,
+					rateLimitMax: rateLimitMax ?? undefined
 				},
-				remaining: remaining ?? undefined,
-				refillAmount: refillAmount ?? undefined,
-				refillInterval: refillInterval ?? undefined,
-				rateLimitEnabled,
-				rateLimitTimeWindow: rateLimitTimeWindow ?? undefined,
-				rateLimitMax: rateLimitMax ?? undefined
-			}
-		});
+				headers: request.headers
+			});
 
-		return {
-			success: true,
-			fullKey: created.key,
-			keyId: created.id,
-			keys: await listOrgKeys(request.headers, orgId)
-		};
+			return {
+				success: true,
+				fullKey: created.key,
+				keyId: created.id,
+				keys: await listOrgKeys(request.headers, orgId)
+			};
+		} catch (e: any) {
+			console.error('Failed to create org API key:', e);
+			return fail(500, { error: e.message || 'Failed to create API key' });
+		}
 	},
 	update: async ({ params, locals, request }) => {
 		const orgId = params.orgId?.trim();
@@ -250,7 +269,6 @@ export const actions: Actions = {
 				expiresIn: expiresIn ?? null,
 				metadata: {
 					...existingMetadata,
-					orgId,
 					allowedSiteIds,
 					label: name || undefined
 				},
@@ -325,7 +343,6 @@ export const actions: Actions = {
 				expiresIn: expiresIn && expiresIn > 0 ? expiresIn : undefined,
 				metadata: {
 					...metadata,
-					orgId,
 					createdByUserId: session.user.id
 				},
 				remaining: key.remaining ?? undefined,

@@ -15,7 +15,7 @@
 		Building2,
 		Server,
 		KeyRound
-	} from 'lucide-svelte';
+	} from '@lucide/svelte';
 
 	export let user: any = null;
 	export let data: {

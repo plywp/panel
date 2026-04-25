@@ -4,7 +4,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { connectorSiteHealthUrl, connectorSiteStatusUrl } from '$lib/connector-url';
 	import axios from 'axios';
-	import { Activity, ArrowLeft, RefreshCw } from 'lucide-svelte';
+	import { Activity, ArrowLeft, RefreshCw } from '@lucide/svelte';
 
 	export let data: {
 		site: {

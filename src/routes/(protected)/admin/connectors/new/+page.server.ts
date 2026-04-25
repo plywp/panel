@@ -67,7 +67,14 @@ const schema = z
 
 		dnsServerAddress: z.string().min(1),
 		dnsServerPort: z.coerce.number().int().min(1).max(65535).default(53),
-		dnsServerProto: z.enum(['tcp', 'udp', 'both']).default('tcp')
+		dnsServerProto: z.enum(['tcp', 'udp', 'both']).default('tcp'),
+
+		dataBaseUsername: z.string().min(1),
+		dataBasePassword: z.string().min(1),
+		dataBaseHost: z.string().min(1),
+		dataBasePort: z.coerce.number().int().min(1).max(65535).default(3306),
+		dataBaseName: z.string().min(1),
+		dataBaseDir: z.string().min(1)
 	})
 	.superRefine((val, ctx) => {
 		if (val.sslIssuerEnabled) {
@@ -118,7 +125,11 @@ const schema = z
 		}
 	});
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ parent }) => {
+	const data = await parent();
+	if (data.locations.length === 0) {
+		throw redirect(303, '/admin/locations');
+	}
 	return {};
 };
 
@@ -194,7 +205,14 @@ export const actions: Actions = {
 
 				dnsServerAddress: parsed.data.dnsServerAddress,
 				dnsServerPort: parsed.data.dnsServerPort,
-				dnsServerProto: parsed.data.dnsServerProto
+				dnsServerProto: parsed.data.dnsServerProto,
+
+				dataBaseUsername: parsed.data.dataBaseUsername,
+				dataBasePassword: parsed.data.dataBasePassword,
+				dataBaseHost: parsed.data.dataBaseHost,
+				dataBasePort: parsed.data.dataBasePort,
+				dataBaseName: parsed.data.dataBaseName,
+				dataBaseDir: parsed.data.dataBaseDir
 			});
 		} catch (e: any) {
 			// MySQL duplicate key (token unique)

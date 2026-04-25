@@ -4,7 +4,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { Switch } from '$lib/components/ui/switch';
-	import { ArrowLeft, Plug, Plus, X } from 'lucide-svelte';
+	import { ArrowLeft, Plug, Plus, X } from '@lucide/svelte';
 
 	export let data: { locations: { id: number; name: string; country: string }[] };
 
@@ -15,6 +15,28 @@
 	let sslIssuerAcceptTos = false;
 	let sslIssuerVerifyDns = true;
 	let sslIssuerVerifyHttp = true;
+
+	let webServer = "nginx";
+	let dataDir = "/var/lib/plywp";
+	let dnsServerAddress = "127.0.0.1";
+	let dnsServerPort = "53";
+	let dnsServerProto = "tcp";
+	let sslIssuerMode = "lego";
+	let sslIssuerKeyType = "rsa2048";
+	let sslIssuerAccountDir = "/var/lib/plyorde/lego";
+	let sslIssuerIncludeWww = "auto";
+	let sslIssuerCertPath = "/etc/ssl/plyorde/{domain}/fullchain.pem";
+	let sslIssuerKeyPath = "/etc/ssl/plyorde/{domain}/privkey.pem";
+	let sslIssuerWebrootPath = "{site_root}";
+	let sslIssuerTimeoutSeconds = "120";
+	let sslIssuerRenewIntervalHours = "24";
+
+	let dataBaseUsername = "plyorde";
+	let dataBasePassword = "";
+	let dataBaseHost = "localhost";
+	let dataBasePort = "3306";
+	let dataBaseName = "plyorde";
+	let dataBaseDir = "/var/lib/plyorde";
 </script>
 
 <div class="max-w-3xl space-y-6 p-6">
@@ -56,33 +78,64 @@
 
 					<div class="grid gap-2">
 						<Label>Web server</Label>
-						<Input name="webServer" value="nginx" required />
+						<Input name="webServer" bind:value={webServer} required />
 					</div>
 				</div>
 
 				<div class="grid gap-2">
 					<Label>Data dir</Label>
-					<Input name="dataDir" value="/var/lib/plywp" required />
+					<Input name="dataDir" bind:value={dataDir} required />
 				</div>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
 					<div class="grid gap-2">
 						<Label>DNS address</Label>
-						<Input name="dnsServerAddress" value="127.0.0.1" required />
+						<Input name="dnsServerAddress" bind:value={dnsServerAddress} required />
 					</div>
 					<div class="grid gap-2">
 						<Label>DNS port</Label>
-						<Input name="dnsServerPort" type="number" value="53" required />
+						<Input name="dnsServerPort" type="number" bind:value={dnsServerPort} required />
 					</div>
 					<div class="grid gap-2">
 						<Label>DNS proto</Label>
-						<select name="dnsServerProto" class="rounded-md border px-3 py-2">
+						<select name="dnsServerProto" bind:value={dnsServerProto} class="rounded-md border px-3 py-2">
 							<option value="tcp">tcp</option>
 							<option value="udp">udp</option>
 							<option value="both">both</option>
 						</select>
 					</div>
 				</div>
+
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+					<div class="grid gap-2">
+						<Label>Database Username</Label>
+						<Input name="dataBaseUsername" bind:value={dataBaseUsername} required />
+					</div>
+					<div class="grid gap-2">
+						<Label>Database Password</Label>
+						<Input name="dataBasePassword" type="password" bind:value={dataBasePassword} required />
+					</div>
+				</div>
+
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+					<div class="grid gap-2">
+						<Label>Database Host</Label>
+						<Input name="dataBaseHost" bind:value={dataBaseHost} required />
+					</div>
+					<div class="grid gap-2">
+						<Label>Database Port</Label>
+						<Input name="dataBasePort" type="number" bind:value={dataBasePort} required />
+					</div>
+					<div class="grid gap-2">
+						<Label>Database Name</Label>
+						<Input name="dataBaseName" bind:value={dataBaseName} required />
+					</div>
+					<div class="grid gap-2">
+						<Label>Database Dir</Label>
+						<Input name="dataBaseDir" bind:value={dataBaseDir} required />
+					</div>
+				</div>
+
 
 				<div class="flex items-center justify-between rounded-md border p-3">
 					<div class="grid gap-0.5">
@@ -115,7 +168,7 @@
 						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 							<div class="grid gap-2">
 								<Label>Issuer mode</Label>
-								<Input name="sslIssuerMode" value="lego" />
+								<Input name="sslIssuerMode" bind:value={sslIssuerMode} />
 							</div>
 							<div class="grid gap-2">
 								<Label>Email</Label>
@@ -134,15 +187,15 @@
 						<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
 							<div class="grid gap-2">
 								<Label>Key type</Label>
-								<Input name="sslIssuerKeyType" value="rsa2048" />
+								<Input name="sslIssuerKeyType" bind:value={sslIssuerKeyType} />
 							</div>
 							<div class="grid gap-2">
 								<Label>Account dir</Label>
-								<Input name="sslIssuerAccountDir" value="/var/lib/plyorde/lego" />
+								<Input name="sslIssuerAccountDir" bind:value={sslIssuerAccountDir} />
 							</div>
 							<div class="grid gap-2">
 								<Label>Include www</Label>
-								<Input name="sslIssuerIncludeWww" value="auto" />
+								<Input name="sslIssuerIncludeWww" bind:value={sslIssuerIncludeWww} />
 							</div>
 						</div>
 
@@ -166,7 +219,7 @@
 								<Label>Cert path</Label>
 								<Input
 									name="sslIssuerCertPath"
-									value={'/etc/ssl/plyorde/{domain}/fullchain.pem'}
+									bind:value={sslIssuerCertPath}
 									required
 								/>
 							</div>
@@ -174,7 +227,7 @@
 								<Label>Key path</Label>
 								<Input
 									name="sslIssuerKeyPath"
-									value={'/etc/ssl/plyorde/{domain}/privkey.pem'}
+									bind:value={sslIssuerKeyPath}
 									required
 								/>
 							</div>
@@ -183,11 +236,11 @@
 						<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 							<div class="grid gap-2">
 								<Label>Webroot path</Label>
-								<Input name="sslIssuerWebrootPath" value={'{site_root}'} />
+								<Input name="sslIssuerWebrootPath" bind:value={sslIssuerWebrootPath} />
 							</div>
 							<div class="grid gap-2">
 								<Label>Timeout seconds</Label>
-								<Input name="sslIssuerTimeoutSeconds" type="number" value="120" />
+								<Input name="sslIssuerTimeoutSeconds" type="number" bind:value={sslIssuerTimeoutSeconds} />
 							</div>
 						</div>
 
@@ -239,7 +292,7 @@
 						{#if sslIssuerRenewEnabled}
 							<div class="grid gap-2">
 								<Label>Renew interval (hours)</Label>
-								<Input name="sslIssuerRenewIntervalHours" type="number" value="24" />
+								<Input name="sslIssuerRenewIntervalHours" type="number" bind:value={sslIssuerRenewIntervalHours} />
 							</div>
 						{/if}
 					</div>

@@ -6,8 +6,8 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
-	import { Plus, Pen, Trash2 } from 'lucide-svelte';
-	import { hashEmail } from '$lib/email-hash';
+	import { Plus, Pen, Trash2 } from '@lucide/svelte';
+	import { getGravatar } from '$lib/email-hash';
 	import type { PageData } from './$types';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -308,7 +308,7 @@
 				login: u.user_login,
 				displayName,
 				email: u.user_email,
-				avatar: hashEmail(u.user_email),
+				avatar: getGravatar(u.user_email),
 				initials: getInitials(displayName),
 				roles: u.roles ?? []
 			} satisfies User;

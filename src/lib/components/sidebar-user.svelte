@@ -3,7 +3,7 @@
 	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
 	import { signOut } from '$lib/auth-client';
-	import { hashEmail } from '$lib/email-hash';
+	import { getGravatar } from '$lib/email-hash';
 
 	type User = {
 		name?: string | null;
@@ -29,7 +29,7 @@
 			return;
 		}
 
-		avatarUrl = email ? await hashEmail(email) : null;
+		avatarUrl = email ? await getGravatar(email) : null;
 	});
 
 	const handleLogout = async () => {

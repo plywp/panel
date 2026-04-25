@@ -20,7 +20,7 @@
 		RotateCw,
 		ShieldCheck,
 		Trash2
-	} from 'lucide-svelte';
+	} from '@lucide/svelte';
 
 	type OrgSite = { id: string; name: string; domain: string };
 
@@ -51,12 +51,7 @@
 		updatedAt: string;
 	};
 
-	export let data: {
-		org: { id: string; name: string; slug: string };
-		sites: OrgSite[];
-		role: string;
-		keys: OrgApiKey[];
-	};
+	let { data }: { data: { org: any, sites: OrgSite[], role: string, keys: OrgApiKey[] } } = $props();
 
 	const permissionMatrix: Array<{ resource: string; actions: string[] }> = [
 		{ resource: 'sites', actions: ['read', 'health', 'credentials'] },
@@ -86,44 +81,48 @@
 		}
 	];
 
-	let keys: OrgApiKey[] = data.keys ?? [];
+	let keys = $state<OrgApiKey[]>(data.keys ?? []);
 
-	let createOpen = false;
-	let editOpen = false;
-	let revokeOpen = false;
-	let actionLoading = false;
+	$effect(() => {
+		keys = data.keys ?? [];
+	});
 
-	let activeKey: OrgApiKey | null = null;
-	let revokeKey: OrgApiKey | null = null;
+	let createOpen = $state(false);
+	let editOpen = $state(false);
+	let revokeOpen = $state(false);
+	let actionLoading = $state(false);
 
-	let createName = '';
-	let createAllSites = true;
-	let createSiteIds: string[] = [];
-	let createPermissions: ApiKeyPermissions = { sites: ['read'] };
-	let createExpiresInDays = '';
-	let createRemaining = '';
-	let createRefillAmount = '';
-	let createRefillInterval = '';
-	let createRateLimitEnabled = false;
-	let createRateLimitMax = '';
-	let createRateLimitWindow = '';
+	let activeKey = $state<OrgApiKey | null>(null);
+	let revokeKey = $state<OrgApiKey | null>(null);
 
-	let editName = '';
-	let editAllSites = true;
-	let editSiteIds: string[] = [];
-	let editPermissions: ApiKeyPermissions = {};
-	let editExpiresInDays = '';
-	let editRemaining = '';
-	let editRefillAmount = '';
-	let editRefillInterval = '';
-	let editRateLimitEnabled = false;
-	let editRateLimitMax = '';
-	let editRateLimitWindow = '';
-	let editEnabled = true;
+	let createName = $state('');
+	let createAllSites = $state(true);
+	let createSiteIds = $state<string[]>([]);
+	let createPermissions = $state<ApiKeyPermissions>({ sites: ['read'] });
+	let createExpiresInDays = $state('');
+	let createRemaining = $state('');
+	let createRefillAmount = $state('');
+	let createRefillInterval = $state('');
+	let createRateLimitEnabled = $state(false);
+	let createRateLimitMax = $state('');
+	let createRateLimitWindow = $state('');
 
-	let createdKeyValue: string | null = null;
-	let createdKeyOpen = false;
-	let copied = false;
+	let editName = $state('');
+	let editAllSites = $state(true);
+	let editSiteIds = $state<string[]>([]);
+	let editPermissions = $state<ApiKeyPermissions>({});
+	let editExpiresInDays = $state('');
+	let editRemaining = $state('');
+	let editRefillAmount = $state('');
+	let editRefillInterval = $state('');
+	let editRateLimitEnabled = $state(false);
+	let editRateLimitMax = $state('');
+	let editRateLimitWindow = $state('');
+	let editEnabled = $state(true);
+
+	let createdKeyValue = $state<string | null>(null);
+	let createdKeyOpen = $state(false);
+	let copied = $state(false);
 
 	const formatDate = (value: string | null | undefined) => {
 		if (!value) return '—';
@@ -140,10 +139,18 @@
 
 	const formatPermissions = (permissions: ApiKeyPermissions | null) => {
 		if (!permissions) return '—';
-		const chunks = Object.entries(permissions)
-			.map(([resource, actions]) => `${resource}:${actions.join(', ')}`)
-			.sort();
-		return chunks.length ? chunks.join(' · ') : '—';
+		try {
+			const chunks = Object.entries(permissions)
+				.map(([resource, actions]) => {
+					const acts = Array.isArray(actions) ? actions : [String(actions)];
+					return `${resource}:${acts.join(', ')}`;
+				})
+				.sort();
+			return chunks.length ? chunks.join(' · ') : '—';
+		} catch (e) {
+			console.error('Error formatting permissions:', e);
+			return 'Error';
+		}
 	};
 
 	const formatRateLimit = (key: OrgApiKey) => {

@@ -8,7 +8,7 @@
 		ChevronLeft,
 		ChevronRight,
 		Users
-	} from 'lucide-svelte';
+	} from '@lucide/svelte';
 	import { client } from '$lib/auth-client';
 	import { onMount } from 'svelte';
 

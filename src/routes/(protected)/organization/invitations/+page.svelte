@@ -5,7 +5,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
 	import * as Separator from '$lib/components/ui/separator';
-	import { Mail, Send, Inbox, RefreshCw } from 'lucide-svelte';
+	import { Mail, Send, Inbox, RefreshCw } from '@lucide/svelte';
 	import { client } from '$lib/auth-client';
 
 	type Invitation = {

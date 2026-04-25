@@ -5,7 +5,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { Switch } from '$lib/components/ui/switch';
-	import { ArrowLeft, Eye, EyeOff, Globe, Plus, X } from 'lucide-svelte';
+	import { ArrowLeft, Eye, EyeOff, Globe, Plus, X } from '@lucide/svelte';
 
 	let passShowable = false;
 	let autoSsl = false;

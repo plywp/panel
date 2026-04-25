@@ -2,9 +2,9 @@ import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from '../configure/$types';
 import { connector } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
-export const GET: RequestHandler = async ({ request }) => {
+export const GET: RequestHandler = async ({ request, url }) => {
 	const auth = request.headers.get('authorization');
 	if (!auth) throw error(401, 'Unauthorized');
 
@@ -14,11 +14,17 @@ export const GET: RequestHandler = async ({ request }) => {
 		throw error(401, 'Invalid authorization header');
 	}
 
-	// Query by token instead of id (assuming connector has a 'token' column)
-	const result = await db.select().from(connector).where(eq(connector.token, token));
+	const nodeId = url.searchParams.get('node');
+	if (!nodeId) throw error(400, 'Node ID is required');
+
+	// Query by token and id for extra security
+	const result = await db
+		.select()
+		.from(connector)
+		.where(and(eq(connector.token, token), eq(connector.id, Number(nodeId))));
 
 	if (result.length === 0) {
-		throw error(404, 'Connector not found');
+		throw error(404, 'Connector not found or invalid token');
 	}
 
 	const conn = result[0];

@@ -15,7 +15,7 @@
 		RefreshCw,
 		Settings,
 		Trash2
-	} from 'lucide-svelte';
+	} from '@lucide/svelte';
 
 	export let data: {
 		site: {

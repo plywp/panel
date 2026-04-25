@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { ProgressBar } from '@prgm/sveltekit-progress-bar';
-	import '$lib/i18n';
 	import './layout.css';
 
 	let { children, data } = $props();
@@ -17,8 +16,6 @@
 			document.body.classList.toggle('dark', dark);
 			document.body.classList.toggle('light', !dark);
 		};
-
-		console.log('Media query matches:', media.matches);
 
 		update();
 		const el = document.getElementById('boot-loader');

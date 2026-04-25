@@ -2,7 +2,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 	import * as ButtonGroup from '$lib/components/ui/button-group/index.js';
-	import { Activity, Plug, Settings, Wrench } from 'lucide-svelte';
+	import { Activity, Plug, Settings, Wrench } from '@lucide/svelte';
 	let { data, configure = false } = $props();
 </script>
 

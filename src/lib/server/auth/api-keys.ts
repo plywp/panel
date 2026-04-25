@@ -4,7 +4,6 @@ import { auth } from '$lib/auth';
 export type ApiKeyPermissions = Record<string, string[]>;
 
 export type OrgApiKeyMetadata = {
-	orgId: string;
 	allowedSiteIds: string[];
 	label?: string;
 	createdByUserId: string;
@@ -19,6 +18,7 @@ export type AdminApiKeyMetadata = {
 export type VerifiedOrgApiKey = {
 	apiKeyId: string;
 	userId: string;
+	organizationId: string;
 	permissions: ApiKeyPermissions | null;
 	metadata: OrgApiKeyMetadata;
 };
@@ -55,7 +55,6 @@ export function parseAdminApiKeyMetadata(value: unknown): AdminApiKeyMetadata | 
 	}
 	if (!parsed || typeof parsed !== 'object') return null;
 	const meta = parsed as AdminApiKeyMetadata;
-	if (meta.kind !== 'admin') return null;
 	if (!meta.createdByUserId) return null;
 	return meta;
 }
@@ -92,12 +91,13 @@ export async function verifyOrgApiKeyOrThrow(
 		throw error(401, result.error?.message ?? 'Unauthorized');
 	}
 
-	const metadata = parseApiKeyMetadata(result.key.metadata);
-	if (!metadata?.orgId || metadata.orgId !== orgId) {
+	if (!result.key.referenceId || (result.key as any).organizationId !== orgId && result.key.referenceId !== orgId) {
 		throw error(403, 'Forbidden');
 	}
 
-	const allowedSiteIds = Array.isArray(metadata.allowedSiteIds) ? metadata.allowedSiteIds : [];
+	const metadata = parseApiKeyMetadata(result.key.metadata);
+
+	const allowedSiteIds = Array.isArray(metadata?.allowedSiteIds) ? metadata.allowedSiteIds : [];
 
 	if (targetSiteId) {
 		const isAllSites = allowedSiteIds.length === 1 && allowedSiteIds[0] === '*';
@@ -108,9 +108,10 @@ export async function verifyOrgApiKeyOrThrow(
 
 	return {
 		apiKeyId: result.key.id,
-		userId: result.key.userId,
+		userId: result.key.referenceId,
+		organizationId: result.key.referenceId,
 		permissions: result.key.permissions ?? null,
-		metadata
+		metadata: metadata || { allowedSiteIds: [], createdByUserId: result.key.referenceId }
 	};
 }
 
@@ -145,7 +146,7 @@ export async function verifyAdminApiKeyOrThrow(
 
 	return {
 		apiKeyId: result.key.id,
-		userId: result.key.userId,
+		userId: result.key.referenceId,
 		permissions: result.key.permissions ?? null,
 		metadata
 	};

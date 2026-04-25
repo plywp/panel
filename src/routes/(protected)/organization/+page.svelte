@@ -7,7 +7,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Separator from '$lib/components/ui/separator';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import { Building2, Users, RefreshCw, Plus, Mail } from 'lucide-svelte';
+	import { Building2, Users, RefreshCw, Plus, Mail } from '@lucide/svelte';
 	import { client } from '$lib/auth-client';
 	import { easeStandard, prefersReducedMotion as prefersReducedMotionSetting } from '$lib/motion';
 	import { flip } from 'svelte/animate';

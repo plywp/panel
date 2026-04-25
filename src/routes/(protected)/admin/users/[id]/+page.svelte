@@ -20,7 +20,7 @@
 		UserCheck,
 		UserCog,
 		UserX
-	} from 'lucide-svelte';
+	} from '@lucide/svelte';
 
 	import { client } from '$lib/auth-client';
 

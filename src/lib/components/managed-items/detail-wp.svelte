@@ -5,8 +5,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 
-	// Optional: if you have DOMPurify installed, uncomment these lines:
-	// import DOMPurify from 'dompurify';
+	import DOMPurify from 'isomorphic-dompurify';
 
 	type WPPlugin = {
 		name: string;
@@ -107,10 +106,7 @@
 
 	function safeHtml(html?: string) {
 		if (!html) return '';
-		// If you have DOMPurify, use it:
-		// return DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
-		// Fallback (no sanitizer): still render, but you should really sanitize if this can be user-controlled.
-		return html;
+		return DOMPurify.sanitize(html, { USE_PROFILES: { html: true } });
 	}
 
 	$: p = plugin;

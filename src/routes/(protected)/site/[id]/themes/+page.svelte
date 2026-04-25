@@ -9,7 +9,7 @@
 	import * as Separator from '$lib/components/ui/separator';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Content } from '$lib/components/ui/card';
-	import { Plus, Trash2, ArrowUp, Power, RefreshCw, Loader2, MoreHorizontal } from 'lucide-svelte';
+	import { Plus, Trash2, ArrowUp, Power, RefreshCw, Loader2, MoreHorizontal } from '@lucide/svelte';
 	import type { PageData } from './$types';
 	import { easeStandard, prefersReducedMotion as getPrefersReducedMotion } from '$lib/motion';
 	import type { ManagedItemBase, ThemeItem } from '$lib/types/managed-items';

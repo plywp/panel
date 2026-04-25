@@ -16,10 +16,9 @@ export const user = mysqlTable("user", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
-  createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
+  createdAt: timestamp("created_at", { fsp: 3 }).notNull(),
   updatedAt: timestamp("updated_at", { fsp: 3 })
-    .defaultNow()
-    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .$onUpdate(() => new Date())
     .notNull(),
   role: text("role"),
   banned: boolean("banned").default(false),
@@ -34,9 +33,9 @@ export const session = mysqlTable(
     id: varchar("id", { length: 36 }).primaryKey(),
     expiresAt: timestamp("expires_at", { fsp: 3 }).notNull(),
     token: varchar("token", { length: 255 }).notNull().unique(),
-    createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { fsp: 3 }).notNull(),
     updatedAt: timestamp("updated_at", { fsp: 3 })
-      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .$onUpdate(() => new Date())
       .notNull(),
     ipAddress: text("ip_address"),
     userAgent: text("user_agent"),
@@ -65,9 +64,9 @@ export const account = mysqlTable(
     refreshTokenExpiresAt: timestamp("refresh_token_expires_at", { fsp: 3 }),
     scope: text("scope"),
     password: text("password"),
-    createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { fsp: 3 }).notNull(),
     updatedAt: timestamp("updated_at", { fsp: 3 })
-      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .$onUpdate(() => new Date())
       .notNull(),
   },
   (table) => [index("account_userId_idx").on(table.userId)],
@@ -80,16 +79,15 @@ export const verification = mysqlTable(
     identifier: varchar("identifier", { length: 255 }).notNull(),
     value: text("value").notNull(),
     expiresAt: timestamp("expires_at", { fsp: 3 }).notNull(),
-    createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { fsp: 3 }).notNull(),
     updatedAt: timestamp("updated_at", { fsp: 3 })
-      .defaultNow()
-      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .$onUpdate(() => new Date())
       .notNull(),
   },
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
-export const organization = mysqlTable(
+export const organization: any = mysqlTable(
   "organization",
   {
     id: varchar("id", { length: 36 }).primaryKey(),
@@ -135,7 +133,7 @@ export const invitation = mysqlTable(
     role: varchar("role", { length: 255 }),
     status: varchar("status", { length: 255 }).default("pending").notNull(),
     expiresAt: timestamp("expires_at", { fsp: 3 }).notNull(),
-    createdAt: timestamp("created_at", { fsp: 3 }).defaultNow().notNull(),
+    createdAt: timestamp("created_at", { fsp: 3 }).notNull(),
     inviterId: varchar("inviter_id", { length: 36 })
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -146,7 +144,7 @@ export const invitation = mysqlTable(
   ],
 );
 
-export const wp_site = mysqlTable("wp_site", {
+export const wp_site: any = mysqlTable("wp_site", {
   id: varchar("id", { length: 36 }).primaryKey(),
   organizationId: varchar("organization_id", { length: 36 })
     .notNull()
@@ -174,13 +172,14 @@ export const apikey = mysqlTable(
   "apikey",
   {
     id: varchar("id", { length: 36 }).primaryKey(),
+    configId: varchar("config_id", { length: 255 })
+      .default("default")
+      .notNull(),
     name: text("name"),
     start: text("start"),
+    referenceId: varchar("reference_id", { length: 255 }).notNull(),
     prefix: text("prefix"),
     key: varchar("key", { length: 255 }).notNull(),
-    userId: varchar("user_id", { length: 36 })
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
     refillInterval: int("refill_interval"),
     refillAmount: int("refill_amount"),
     lastRefillAt: timestamp("last_refill_at", { fsp: 3 }),
@@ -198,8 +197,9 @@ export const apikey = mysqlTable(
     metadata: text("metadata"),
   },
   (table) => [
+    index("apikey_configId_idx").on(table.configId),
+    index("apikey_referenceId_idx").on(table.referenceId),
     index("apikey_key_idx").on(table.key),
-    index("apikey_userId_idx").on(table.userId),
   ],
 );
 
@@ -235,6 +235,7 @@ export const organizationRelations = relations(
     members: many(member),
     invitations: many(invitation),
     wp_sites: many(wp_site),
+    apikeys: many(apikey),
   }),
 );
 
@@ -270,7 +271,11 @@ export const wp_siteRelations = relations(wp_site, ({ one, many }) => ({
 
 export const apikeyRelations = relations(apikey, ({ one }) => ({
   user: one(user, {
-    fields: [apikey.userId],
+    fields: [apikey.referenceId],
     references: [user.id],
+  }),
+  organization: one(organization, {
+    fields: [apikey.referenceId],
+    references: [organization.id],
   }),
 }));

@@ -1,5 +1,3 @@
-import { redirect } from '@sveltejs/kit';
-import { auth } from '$lib/auth';
 import type { LayoutServerLoad } from './$types';
 import { getValue } from '$lib/server/db/kv';
 

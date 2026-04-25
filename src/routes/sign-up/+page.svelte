@@ -11,13 +11,13 @@
 	import { browser } from '$app/environment';
 	import { fly } from 'svelte/transition';
 
-	import User from 'lucide-svelte/icons/user';
-	import Mail from 'lucide-svelte/icons/mail';
-	import Lock from 'lucide-svelte/icons/lock';
-	import ArrowRight from 'lucide-svelte/icons/arrow-right';
-	import Eye from 'lucide-svelte/icons/eye';
-	import EyeOff from 'lucide-svelte/icons/eye-off';
-	import LogIn from 'lucide-svelte/icons/log-in';
+	import User from '@lucide/svelte/icons/user';
+	import Mail from '@lucide/svelte/icons/mail';
+	import Lock from '@lucide/svelte/icons/lock';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
+	import Eye from '@lucide/svelte/icons/eye';
+	import EyeOff from '@lucide/svelte/icons/eye-off';
+	import LogIn from '@lucide/svelte/icons/log-in';
 	import LanguageSwitcher from '$lib/components/lang-switcher.svelte';
 
 	const firstName = writable('');

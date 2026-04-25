@@ -1,10 +1,10 @@
 import { betterAuth, type BetterAuthPlugin } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '$lib/server/db';
-import { admin, organization, apiKey } from 'better-auth/plugins';
+import { admin, organization } from 'better-auth/plugins';
+import { apiKey } from "@better-auth/api-key"
 import * as schema from '$lib/server/db/schema';
 import { createAuthEndpoint } from 'better-auth/api';
-import { createAuthMiddleware } from 'better-auth/plugins';
 import { sessionMiddleware } from 'better-auth/api';
 import { sendEmail } from '$lib/server/email';
 
@@ -45,21 +45,6 @@ const schemaPlugin = () => {
 					status: { type: 'string', required: true, input: true, defaultValue: 'provisioning' }
 				}
 			}
-		},
-		hooks: {
-			before: [
-				{
-					matcher: (context) => {
-						return context.headers?.get('x-my-header') === 'my-value';
-					},
-					handler: createAuthMiddleware(async (ctx) => {
-						const session = await getSessionFromCtx(ctx);
-						return {
-							context: ctx
-						};
-					})
-				}
-			]
 		},
 		endpoints: {
 			listServices: createAuthEndpoint(
@@ -161,7 +146,17 @@ export const auth = betterAuth({
 		schemaPlugin(),
 		apiKey({
 			defaultPrefix: 'ply_',
-			enableMetadata: true
+			enableMetadata: true,
+			configurations: [
+				{
+					id: 'user',
+					references: 'user'
+				},
+				{
+					id: 'organization',
+					references: 'organization'
+				}
+			]
 		})
 	]
 });

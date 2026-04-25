@@ -8,10 +8,10 @@
 	import { Label } from '$lib/components/ui/label';
 	import { toast } from 'svelte-sonner';
 
-	import Lock from 'lucide-svelte/icons/lock';
-	import Eye from 'lucide-svelte/icons/eye';
-	import EyeOff from 'lucide-svelte/icons/eye-off';
-	import ArrowRight from 'lucide-svelte/icons/arrow-right';
+	import Lock from '@lucide/svelte/icons/lock';
+	import Eye from '@lucide/svelte/icons/eye';
+	import EyeOff from '@lucide/svelte/icons/eye-off';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 
 	const password = writable('');
 	const confirmPassword = writable('');

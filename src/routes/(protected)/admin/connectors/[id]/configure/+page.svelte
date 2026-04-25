@@ -4,7 +4,7 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
-	import { ArrowLeft, Check, Copy, Terminal } from 'lucide-svelte';
+	import { ArrowLeft, Check, Copy, Terminal } from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
 
 	import CardHead from './../../CardHead.svelte';
@@ -18,7 +18,7 @@
 	let copied = false;
 
 	$: origin = typeof window === 'undefined' ? '' : window.location.origin;
-	$: configCommand = `plyorde configure --panel ${origin || 'http://panel.local'} --node ${data?.conn?.id ?? 'unknown'} --token ${data?.conn?.token ?? 'unknown'}`;
+	$: configCommand = `sudo ./plyorde configure --panel ${origin || 'http://panel.local'} --node ${data?.conn?.id ?? 'unknown'} --token ${data?.conn?.token ?? 'unknown'}`;
 
 	async function copyToClipboard(text: string) {
 		try {
@@ -51,12 +51,12 @@ certificate = "${String(data?.conn?.daemonSslCrt ?? '').replace(/"/g, '\\"')}"
 key = "${String(data?.conn?.daemonSslKey ?? '').replace(/"/g, '\\"')}"
 
 [mysql]
-host = "localhost"
-port = 3306
-user = "plyorde"
-password = "strong_password_here"
-database = "plyorde"
-data_dir = "/var/lib/mysql"
+host = "${String(data?.conn?.dataBaseHost ?? 'localhost').replace(/"/g, '\\"')}"
+port = ${Number(data?.conn?.dataBasePort ?? 3306)}
+user = "${String(data?.conn?.dataBaseUsername ?? '').replace(/"/g, '\\"')}"
+password = "${String(data?.conn?.dataBasePassword ?? '').replace(/"/g, '\\"')}"
+database = "${String(data?.conn?.dataBaseName ?? '').replace(/"/g, '\\"')}"
+data_dir = "${String(data?.conn?.dataBaseDir ?? '/var/lib/plyorde').replace(/"/g, '\\"')}"
 
 [storage]
 data_dir = "${String(data?.conn?.dataDir ?? '/var/plyorde').replace(/"/g, '\\"')}"
@@ -120,7 +120,7 @@ server_ip = "${String(data?.conn?.serverIp ?? '127.0.0.1').replace(/"/g, '\\"')}
 					Config command
 				</Dialog.Title>
 				<Dialog.Description>
-					Copy this command and run it on the node where you want to configure the connector.
+					Run this command to automatically configure the connector. By default, it saves to <code>/etc/plyorde/config.toml</code>. Use <code>-c</code> to specify a custom path.
 				</Dialog.Description>
 			</Dialog.Header>
 

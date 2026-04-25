@@ -4,8 +4,5 @@ import { defineConfig } from 'vite';
 import devtools from 'vite-plugin-devtools-json';
 
 export default defineConfig({
-    plugins: [tailwindcss(), sveltekit(), devtools()],
-    server: {
-      allowedHosts: []
-    }
+    plugins: [tailwindcss(), sveltekit(), devtools()]
 });

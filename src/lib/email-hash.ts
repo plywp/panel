@@ -13,4 +13,4 @@ async function getGravatar(email: string): Promise<string> {
 	return `https://www.gravatar.com/avatar/${hash}`;
 }
 
-export { getGravatar as hashEmail, hashEmail as rawHash };
+export { getGravatar, hashEmail as hashEmailRaw };

@@ -1,0 +1,1 @@
+ALTER TABLE `connector` ADD `data_base_dir` text DEFAULT ('/var/lib/plyorde') NOT NULL;

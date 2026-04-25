@@ -10,6 +10,6 @@ export const load: PageServerLoad = async ({ request }) => {
 	if (!session) {
 		throw redirect(302, '/sign-in');
 	} else {
-		redirect(302, '/dashboard');
+		throw redirect(302, '/dashboard');
 	}
 };

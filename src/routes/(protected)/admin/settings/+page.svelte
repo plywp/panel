@@ -4,7 +4,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { enhance } from '$app/forms';
-	import { Save, Settings } from 'lucide-svelte';
+	import { Save, Settings } from '@lucide/svelte';
 
 	export let data: {
 		meta: {
