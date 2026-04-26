@@ -76,8 +76,6 @@ export async function plyordeRequest<T>(
 	init: RequestInit = {}
 ): Promise<T> {
 	const url = new URL(path, normalizeConnectorBaseUrl(connector));
-	const controller = new AbortController();
-	const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
 
 	const headers = new Headers(init.headers);
 	headers.set('Authorization', `Bearer ${connector.token}`);
@@ -86,26 +84,21 @@ export async function plyordeRequest<T>(
 		headers.set('Content-Type', 'application/json');
 	}
 
-	try {
-		const res = await fetch(url, {
-			...init,
-			headers,
-			signal: controller.signal
-		});
+	const res = await fetch(url, {
+		...init,
+		headers,
+	});
 
-		const text = await res.text();
-		if (!res.ok) {
-			throw new Error(`plyorde ${res.status} ${res.statusText}: ${text}`);
-		}
-
-		if (!text) {
-			return null as T;
-		}
-
-		return JSON.parse(text) as T;
-	} finally {
-		clearTimeout(timeout);
+	const text = await res.text();
+	if (!res.ok) {
+		throw new Error(`plyorde ${res.status} ${res.statusText}: ${text}`);
 	}
+
+	if (!text) {
+		return null as T;
+	}
+
+	return JSON.parse(text) as T;
 }
 
 export async function listPlyordeSites(connector: ConnectorInfo): Promise<PlyordeSite[]> {
